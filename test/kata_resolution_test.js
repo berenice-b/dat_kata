@@ -54,5 +54,21 @@ describe("PathSimplifier", () => {
 
       assert.equal(result, expectedPath);
     });
+    it("removes unnecessary slashes", () => {
+      const inputPath = "/hello/world/";
+      const expectedPath = "/hello/world";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.equal(result, expectedPath);
+    });
+    it("returns the root for the root", () => {
+      const inputPath = "/";
+      const expectedPath = "/";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.equal(result, expectedPath);
+    });
   });
 });

@@ -13,28 +13,28 @@ If something isn't clear to you, make assumptions in the comment.
 
 const PathSimplifier = {
   simplifiesPath(str) {
-    // Je remplace /./ par / et ./ par /:
+    // Je simplifie le string de départ en remplaçant /./ par / et ./ par /:
     const regex2 = /\.{2}/g;
     console.log("str:", str);
     str = str.replace("/./", "/");
     str = str.replace(regex2, ".");
-    console.log("str clean:", str);
-    // Jusqu'au premier point trouvé, j'enregistre le substring comme résultat :
-    let result = "";
-    console.log("result:", result);
+    array = str.split("/");
+    array = array.filter((item) => item);
+    console.log("array clean:", array);
+    let result = [];
     // A chaque nouveau point rencontré, je retire le dernier caractère du résultat :
-    for (let i = 0; i < str.length; i++) {
-      if (str[i] === ".") {
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] === ".") {
         console.log("result bf slice:", result);
-        result = result.slice(0, result.length - 1);
+        result.pop();
         console.log("result sliced:", result);
-      } else if (str[i] != "." && str[i] != "/") {
+      } else if (array[i] != "." && array[i] != "/") {
         console.log("result bf +:", result);
-        result += str[i];
+        result.push(array[i]);
         console.log("result af +:", result);
       }
     }
-    result = "/" + result.split("").join("/");
+    result = "/" + result.join("/");
     return result;
   },
 };
