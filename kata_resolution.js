@@ -12,9 +12,33 @@ If something isn't clear to you, make assumptions in the comment.
 */
 
 const PathSimplifier = {
-  simplifiesPath(arg) {
-    return "/c";
+  simplifiesPath(str) {
+    for (let i = str.length - 1; i > 0; i--) {
+      if (str[i] === "/") {
+        if (str[i - 1] != "." && str[i - 1] != "/") {
+          return "/" + str[i - 1];
+        }
+      }
+    }
   },
 };
 
 module.exports = PathSimplifier;
+
+/* 
+
+
+
+
+if (str[i - 1] === "/") {
+          str.slice(i, 1);
+        }
+        if (str[i - 1] === ".") {
+          if (str[i - 2] === "/") {
+            str.slice(i, 1);
+            str.slice(i - 1, 1);
+          }
+          if (str[i - 2] === ".") {
+            return "/" + str[i];
+          }
+        } */

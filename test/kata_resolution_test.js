@@ -13,6 +13,12 @@ If something isn't clear to you, make assumptions in the comment.
 
 /* 
 MY ASSUMPTIONS:
+About the input string:
+1) Must be a string
+2) Must not be empty (at leat one slash: "/")
+3) Consists only of letters, dots and / or slashes
+
+About the function:
 1) Two dots in the path ("../" or "..") mean I move one directory level up
   Two dots x times means I move x levels up (Ex: if x = 2, if have "../.." or "../../")
 
@@ -21,7 +27,7 @@ MY ASSUMPTIONS:
 3) A slash after a directory name and at the end of the input string is useless and has to be removed
   (Ex: "/myproject/" becomes "/myproject")
 
-4) The output path always begins with a slash but never ends with a slash
+4) The output path always begins with a slash (it's an absolute path) but never ends with a slash (a slash after the last directory is useless)
 
 5) Double slashes become a single slash
 */
@@ -30,20 +36,31 @@ const assert = require("assert");
 const PathSimplifier = require("../kata_resolution.js");
 
 describe("PathSimplifier", () => {
-  it("simplifies the given path", () => {
-    const inputPath = "/a/./b/../../c/";
-    const expectedPath = "/c";
+  describe(".simplifiesPath", () => {
+    it("simplifies the given path", () => {
+      const inputPath = "/a/./b/../../c/";
+      const expectedPath = "/c";
 
-    const result = PathSimplifier.simplifiesPath(inputPath);
+      const result = PathSimplifier.simplifiesPath(inputPath);
+      console.log("result:", result);
 
-    assert.equal(PathSimplifier.simplifiesPath(result), expectedPath);
-  });
-  it("simplifies the given path 2", () => {
-    const inputPath = "/a/./b/../c/../d/";
-    const expectedPath = "/d";
+      assert.equal(result, expectedPath);
+    });
+    it("simplifies the given path 2", () => {
+      const inputPath = "/a/./b/../c/../d/";
+      const expectedPath = "/d";
 
-    const result = PathSimplifier.simplifiesPath(inputPath);
+      const result = PathSimplifier.simplifiesPath(inputPath);
 
-    assert.equal(PathSimplifier.simplifiesPath(result), expectedPath);
+      assert.equal(result, expectedPath);
+    });
+    it("simplifies the given path 2", () => {
+      const inputPath = "/a/./b/c/d/";
+      const expectedPath = "/a/b/c/d";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.equal(result, expectedPath);
+    });
   });
 });
