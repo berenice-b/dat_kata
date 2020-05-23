@@ -15,8 +15,8 @@ If something isn't clear to you, make assumptions in the comment.
 MY ASSUMPTIONS:
 About the input string:
 1) Must be a string
-2) Must not be empty (at leat one slash: "/")
-3) Consists only of letters, dots and / or slashes
+2) Must not be empty (at least one slash: "/")
+
 
 About the function:
 1) Two dots in the path ("../" or "..") mean I move one directory level up
@@ -29,7 +29,7 @@ About the function:
 
 4) The output path always begins with a slash (it's an absolute path) but never ends with a slash (a slash after the last directory is useless)
 
-5) Double slashes become a single slash
+5) Multiple consecutive slashes become a single slash
 */
 
 const assert = require("assert");
@@ -48,15 +48,7 @@ describe("PathSimplifier", () => {
     });
     it("simplifies the given path 2", () => {
       const inputPath = "/a/./b/../c/../d/";
-      const expectedPath = "/d";
-
-      const result = PathSimplifier.simplifiesPath(inputPath);
-
-      assert.equal(result, expectedPath);
-    });
-    it("simplifies the given path 2", () => {
-      const inputPath = "/a/./b/c/d/";
-      const expectedPath = "/a/b/c/d";
+      const expectedPath = "/a/d";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
