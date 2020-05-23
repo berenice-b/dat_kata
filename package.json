@@ -1,0 +1,14 @@
+{
+  "name": "dat_kata",
+  "version": "1.0.0",
+  "description": "kata resolution",
+  "main": "kata_resolution.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "berenice",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^7.1.2"
+  }
+}
