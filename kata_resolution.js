@@ -12,26 +12,29 @@ If something isn't clear to you, make assumptions in the comment.
 */
 
 const PathSimplifier = {
-  simplifiesPath(str) {
-    // Je simplifie le string de départ en remplaçant /./ par / et ./ par /:
-    const regex2 = /\.{2}/g;
-    console.log("str:", str);
-    str = str.replace("/./", "/");
-    str = str.replace(regex2, ".");
-    array = str.split("/");
-    array = array.filter((item) => item);
-    console.log("array clean:", array);
+  simplifiesPath(inputString) {
+    // I simplify the input string and turn it into an array:
+    const singleDotsRegex = /(?<=\/)(\.)(?=\/)/g; // Matches single dots between slashes
+    const doubleDotsRegex = /\.{2}/g; // Matches "/../" substring
+    console.log("inputString:", inputString);
+    let cleanString = inputString
+      .replace(singleDotsRegex, "")
+      .replace(doubleDotsRegex, ".");
+    console.log("cleanString:", cleanString);
+    let pathArray = cleanString.split("/");
+    pathArray = pathArray.filter((item) => item);
+    console.log("pathArray:", pathArray);
     let result = [];
     // A chaque nouveau point rencontré, je retire le dernier caractère du résultat :
-    for (let i = 0; i < array.length; i++) {
-      if (array[i] === ".") {
-        console.log("result bf slice:", result);
+    for (let i = 0; i < pathArray.length; i++) {
+      if (pathArray[i] === ".") {
+        console.log("result before .pop():", result);
         result.pop();
-        console.log("result sliced:", result);
-      } else if (array[i] != "." && array[i] != "/") {
-        console.log("result bf +:", result);
-        result.push(array[i]);
-        console.log("result af +:", result);
+        console.log("result popped:", result);
+      } else if (pathArray[i] != "." && pathArray[i] != "/") {
+        console.log("result before push:", result);
+        result.push(pathArray[i]);
+        console.log("result after push:", result);
       }
     }
     result = "/" + result.join("/");

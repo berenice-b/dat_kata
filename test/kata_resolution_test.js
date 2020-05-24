@@ -17,7 +17,6 @@ About the input string:
 1) Must be a string
 2) Must not be empty (at least one slash: "/")
 
-
 About the function:
 1) Two dots in the path ("../" or "..") mean I move one directory level up
   Two dots x times means I move x levels up (Ex: if x = 2, if have "../.." or "../../")
@@ -54,7 +53,7 @@ describe("PathSimplifier", () => {
 
       assert.equal(result, expectedPath);
     });
-    it("removes unnecessary slashes", () => {
+    it("removes end slashes", () => {
       const inputPath = "/hello/world/";
       const expectedPath = "/hello/world";
 
@@ -62,8 +61,44 @@ describe("PathSimplifier", () => {
 
       assert.equal(result, expectedPath);
     });
+    it("turns multiple consecutive slashes into one or no slash", () => {
+      const inputPath = "/hello///dear_world/";
+      const expectedPath = "/hello/dear_world";
+      const otherInputPath = "/hello/";
+      const otherExpectedPath = "/hello";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+      const otherResult = PathSimplifier.simplifiesPath(otherInputPath);
+
+      assert.equal(result, expectedPath);
+      assert.equal(otherResult, otherExpectedPath);
+    });
+    it("removes unnecessary single dots", () => {
+      const inputPath = "/a/./b/./c/./d/";
+      const expectedPath = "/a/b/c/d";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.equal(result, expectedPath);
+    });
+    it("removes all unnecessary characters", () => {
+      const inputPath = "/a//b////c/d//././/..";
+      const expectedPath = "/a/b/c";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.equal(result, expectedPath);
+    });
     it("returns the root for the root", () => {
       const inputPath = "/";
+      const expectedPath = "/";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.equal(result, expectedPath);
+    });
+    it("deals with non ops like going one level up the root", () => {
+      const inputPath = "/../";
       const expectedPath = "/";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
