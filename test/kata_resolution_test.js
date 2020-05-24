@@ -24,22 +24,39 @@ const PathSimplifier = require("../kata_resolution.js");
 
 describe("PathSimplifier", () => {
   describe(".simplifiesPath", () => {
-    it("simplifies the given path", () => {
+    it("accepts only strings as input", () => {
+      const userInput = 149;
+
+      const exercise = () => {
+        PathSimplifier.simplifiesPath(userInput);
+      };
+
+      assert.throws(exercise, /Input should be a string/);
+    });
+    it("throws an error if input string is empty", () => {
+      const emptyString = "";
+
+      const exercise = () => {
+        PathSimplifier.simplifiesPath(emptyString);
+      };
+
+      assert.throws(exercise, /Input can't be an empty string/);
+    });
+    it("simplifies a given path", () => {
       const inputPath = "/a/./b/../../c/";
       const expectedPath = "/c";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
-      console.log("result:", result);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
     });
-    it("simplifies the given path 2", () => {
+    it("simplifies a given path 2", () => {
       const inputPath = "/a/./b/../c/../d/";
       const expectedPath = "/a/d";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
     });
     it("removes end slashes", () => {
       const inputPath = "/hello/world/";
@@ -47,19 +64,39 @@ describe("PathSimplifier", () => {
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
     });
-    it("turns multiple consecutive slashes into one or no slash", () => {
-      const inputPath = "/hello///dear_world/";
-      const expectedPath = "/hello/dear_world";
-      const otherInputPath = "/hello/";
-      const otherExpectedPath = "/hello";
+    it("turns multiple consecutive slashes into one slash", () => {
+      const inputPath = "/hello///world/";
+      const expectedPath = "/hello/world";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
-      const otherResult = PathSimplifier.simplifiesPath(otherInputPath);
 
-      assert.equal(result, expectedPath);
-      assert.equal(otherResult, otherExpectedPath);
+      assert.strictEqual(result, expectedPath);
+    });
+    it("removes remaining slash after the last directory", () => {
+      const inputPath = "/hello/";
+      const expectedPath = "/hello";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.strictEqual(result, expectedPath);
+    });
+    it("understands and respects folder syntax", () => {
+      const inputPath = "/main-file/sub-file/";
+      const expectedPath = "/main-file/sub-file";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.strictEqual(result, expectedPath);
+    });
+    it("understands and respects file syntax", () => {
+      const inputPath = "/hello/dear_world.js/";
+      const expectedPath = "/hello/dear_world.js";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.strictEqual(result, expectedPath);
     });
     it("removes unnecessary single dots", () => {
       const inputPath = "/a/./b/./c/./d/";
@@ -67,15 +104,31 @@ describe("PathSimplifier", () => {
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
     });
-    it("removes all unnecessary characters", () => {
+    it("removes all unnecessary dots", () => {
+      const inputPath = "/a/../.././../../";
+      const expectedPath = "/";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.strictEqual(result, expectedPath);
+    });
+    it("removes all unnecessary slashes and dots", () => {
       const inputPath = "/a//b////c/d//././/..";
       const expectedPath = "/a/b/c";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
+    });
+    it("removes all repetitive slashes", () => {
+      const inputPath = "/a//b//c//////d";
+      const expectedPath = "/a/b/c/d";
+
+      const result = PathSimplifier.simplifiesPath(inputPath);
+
+      assert.strictEqual(result, expectedPath);
     });
     it("returns the root for the root", () => {
       const inputPath = "/";
@@ -83,15 +136,15 @@ describe("PathSimplifier", () => {
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
     });
-    it("deals with non ops like going one level up the root", () => {
-      const inputPath = "/../";
+    it("deals with the non-op of going one level up the root", () => {
+      const inputPath = "../";
       const expectedPath = "/";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
-      assert.equal(result, expectedPath);
+      assert.strictEqual(result, expectedPath);
     });
   });
 });

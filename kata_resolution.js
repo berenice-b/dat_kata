@@ -1,27 +1,26 @@
 const PathSimplifier = {
   simplifiesPath(inputString) {
+    if (typeof inputString !== "string") {
+      throw new Error("ERROR: Input should be a string");
+    }
+    if (inputString === "") {
+      throw new Error("ERROR: Input can't be an empty string");
+    }
     // I simplify the input string and turn it into an array:
     const singleDotsRegex = /(?<=\/)(\.)(?=\/)/g; // Matches single dots between slashes
     const doubleDotsRegex = /\.{2}/g; // Matches "/../" substring
-    console.log("inputString:", inputString);
-    let cleanString = inputString
+    let pathArray = inputString
       .replace(singleDotsRegex, "")
-      .replace(doubleDotsRegex, ".");
-    console.log("cleanString:", cleanString);
-    let pathArray = cleanString.split("/");
-    pathArray = pathArray.filter((item) => item);
-    console.log("pathArray:", pathArray);
+      .replace(doubleDotsRegex, ".")
+      .split("/")
+      .filter((item) => item);
     let result = [];
-    // A chaque nouveau point rencontré, je retire le dernier caractère du résultat :
+    // Every time I move up to a directory level, I pop the last directory out from the result:
     for (let i = 0; i < pathArray.length; i++) {
       if (pathArray[i] === ".") {
-        console.log("result before .pop():", result);
         result.pop();
-        console.log("result popped:", result);
       } else if (pathArray[i] != "." && pathArray[i] != "/") {
-        console.log("result before push:", result);
         result.push(pathArray[i]);
-        console.log("result after push:", result);
       }
     }
     result = "/" + result.join("/");
