@@ -3,9 +3,10 @@ MY ASSUMPTIONS:
 
 About the input string:
 1) Must be a string
-2) Must not be empty (at least one slash: "/")
+2) Must not be empty (at least one slash: "/" or folder name)
+3) Must not contain three dots in a row
 
-About the function:
+About the .simplifiesPath method:
 1) Two dots in the path ("../") mean I move one directory level up
   Two dots x times means I move x levels up (Ex: if x = 2, I have "../../")
 
@@ -23,7 +24,7 @@ const assert = require("assert");
 const PathSimplifier = require("../kata_resolution.js");
 
 describe("PathSimplifier", () => {
-  describe(".simplifiesPath", () => {
+  describe(".checksInput", () => {
     it("accepts only strings as input", () => {
       const userInput = 149;
 
@@ -42,6 +43,26 @@ describe("PathSimplifier", () => {
 
       assert.throws(exercise, /Input can't be an empty string/);
     });
+    it("throws an error if input path consists of a single dot", () => {
+      const inputPath = ".";
+
+      const exercise = () => {
+        PathSimplifier.simplifiesPath(inputPath);
+      };
+
+      assert.throws(exercise, /Input is not a valid path/);
+    });
+    it("throws an error if input path has three dots in a row", () => {
+      const inputPath = "/a/./b/../.../c/";
+
+      const exercise = () => {
+        PathSimplifier.simplifiesPath(inputPath);
+      };
+
+      assert.throws(exercise, /Input is not a valid path/);
+    });
+  });
+  describe(".simplifiesPath", () => {
     it("simplifies a given path", () => {
       const inputPath = "/a/./b/../../c/";
       const expectedPath = "/c";
@@ -58,22 +79,6 @@ describe("PathSimplifier", () => {
 
       assert.strictEqual(result, expectedPath);
     });
-    it("removes end slashes", () => {
-      const inputPath = "/hello/world/";
-      const expectedPath = "/hello/world";
-
-      const result = PathSimplifier.simplifiesPath(inputPath);
-
-      assert.strictEqual(result, expectedPath);
-    });
-    it("turns multiple consecutive slashes into one slash", () => {
-      const inputPath = "/hello///world/";
-      const expectedPath = "/hello/world";
-
-      const result = PathSimplifier.simplifiesPath(inputPath);
-
-      assert.strictEqual(result, expectedPath);
-    });
     it("removes remaining slash after the last directory", () => {
       const inputPath = "/hello/";
       const expectedPath = "/hello";
@@ -82,17 +87,9 @@ describe("PathSimplifier", () => {
 
       assert.strictEqual(result, expectedPath);
     });
-    it("understands and respects folder syntax", () => {
-      const inputPath = "/main-file/sub-file/";
-      const expectedPath = "/main-file/sub-file";
-
-      const result = PathSimplifier.simplifiesPath(inputPath);
-
-      assert.strictEqual(result, expectedPath);
-    });
-    it("understands and respects file syntax", () => {
-      const inputPath = "/hello/dear_world.js/";
-      const expectedPath = "/hello/dear_world.js";
+    it("understands and respects folder and file syntax", () => {
+      const inputPath = "/main-file/sub-file/dear_world.js/";
+      const expectedPath = "/main-file/sub-file/dear_world.js";
 
       const result = PathSimplifier.simplifiesPath(inputPath);
 
